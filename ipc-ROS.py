@@ -1,7 +1,6 @@
 import os
 import json
 import uuid
-import time
 from datetime import datetime
 import paho.mqtt.client as mqtt
 from multiprocessing.connection import Listener
@@ -14,7 +13,7 @@ BROKER_ADDRESS = "broker.hivemq.com"
 PORT = 1883
 TOPIC_BINARY = "binaryChunks"
 TOPIC_JSON   = "telemetry/data"
-CHUNK_SIZE = 100 * 1024  # 100KB
+CHUNK_SIZE = 100 * 1024  
 
 # IPC (ROSノードと同じ設定にする)
 IPC_ADDRESS = ('localhost', 6000)
@@ -37,7 +36,6 @@ def on_publish(client, userdata, mid):
     pass
 
 # MQTTクライアントのセットアップ
-# ★ここ重要: Version 1 を明示的に指定して互換性を保つ
 client = mqtt.Client(
     client_id=f"bridge_{uuid.uuid4()}",
     callback_api_version=mqtt.CallbackAPIVersion.VERSION1
@@ -112,7 +110,6 @@ def send_telemetry(speed, gnss_x, gnss_y, source_event):
 # メイン処理 (IPC Server -> MQTT Bridge)
 # ----------------------------------------------------
 def main():
-    # 1. MQTT接続開始
     try:
         client.connect(BROKER_ADDRESS, PORT, 60)
         client.loop_start() 
@@ -120,7 +117,6 @@ def main():
         print(f"MQTT Connection failed: {e}")
         return
 
-    # 2. IPCリスナー起動
     listener = Listener(IPC_ADDRESS, authkey=IPC_AUTHKEY)
     print(f"\n[Bridge] Waiting for ROS2 Node connection on {IPC_ADDRESS}...")
 
