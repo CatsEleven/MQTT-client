@@ -10,3 +10,4 @@
 ## 手順
 1. このリポジトリをcloneしてください．
 2. ```pip install -r requirements.txt```で依存関係をインストールします．
+3. ```python ipc-ROS.py```コマンドで起動します．
